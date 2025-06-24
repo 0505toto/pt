@@ -1,0 +1,209 @@
+/* ----- 全体のスタイル設定 ----- */
+:root {
+    --bg-color: #f8f9fa; /* 全体の背景色 */
+    --main-text-color: #343a40; /* 基本の文字色 */
+    --accent-color: #007bff; /* アクセントカラー（青系） */
+    --header-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* ヘッダーのグラデーション */
+    --card-bg-color: #ffffff; /* 各項目の背景色 */
+    --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* カードの影 */
+    --point-color: #e63946; /* ポイントの文字色 */
+    --border-color: #e9ecef; /* 境界線の色 */
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--main-text-color);
+    margin: 0;
+    padding: 20px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ----- コンテナとヘッダー ----- */
+.glossary-container {
+    max-width: 800px;
+    margin: 0 auto;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.glossary-header {
+    background: var(--header-bg);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    text-align: center;
+    margin-bottom: 40px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.glossary-header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+    letter-spacing: 1.5px;
+    animation: slideDown 0.8s ease-out;
+}
+
+.glossary-header p {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin: 0;
+    animation: slideDown 0.8s ease-out 0.2s;
+    animation-fill-mode: backwards; /* アニメーション開始前に非表示 */
+}
+
+/* ----- カテゴリのタイトル ----- */
+.category-title {
+    font-size: 1.8rem;
+    color: var(--accent-color);
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--accent-color);
+    margin-bottom: 25px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.glossary-category {
+    margin-bottom: 50px;
+}
+
+
+/* ----- 用語集アイテム（アコーディオン） ----- */
+.glossary-item {
+    background-color: var(--card-bg-color);
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    overflow: hidden; /* 開閉アニメーションのため */
+}
+
+.glossary-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+}
+
+summary {
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 20px 25px;
+    cursor: pointer;
+    list-style: none; /* デフォルトのマーカーを非表示 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+summary::-webkit-details-marker {
+    display: none; /* Safari用のマーカー非表示 */
+}
+
+/* 開閉アイコン（＋/－） */
+summary::after {
+    content: '+';
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--accent-color);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glossary-item[open] > summary {
+    background-color: #fdfdff;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.glossary-item[open] > summary::after {
+    transform: rotate(45deg);
+}
+
+/* ----- 開いたときの中身 ----- */
+.item-content {
+    padding: 0px 25px 20px 25px; /* JSでアニメーションさせるため初期パディングは上下0 */
+    border-top: 1px solid var(--border-color);
+    animation: fadeInContent 0.5s ease; /* JSなしでも最低限動くように */
+}
+
+.item-content p {
+    margin: 15px 0 0 0;
+}
+
+.item-content p:first-child {
+    margin-top: 20px;
+}
+
+.item-content strong {
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+.item-content .point {
+    background-color: #fff8f8;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border-left: 5px solid var(--point-color);
+    color: #555;
+}
+.item-content .point strong {
+    color: var(--point-color);
+}
+
+/* ----- アニメーション定義 ----- */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInContent {
+     from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* ----- JavaScriptによるアニメーション制御 ----- */
+
+/* 開閉するコンテンツ部分の初期状態 */
+.glossary-item .item-content {
+    overflow: hidden;
+    max-height: 0; /* JSで高さを変更してスライドアニメーションを実現 */
+    transition: max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1), 
+                padding 0.4s ease, 
+                opacity 0.2s ease;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* アイテムが開いたときのコンテンツのスタイル */
+.glossary-item[open] > .item-content {
+    max-height: 1000px; /* 十分な高さを確保 */
+    opacity: 1;
+    padding-top: 0px;
+    padding-bottom: 20px;
+}
+
+/* 閉じるアニメーション中のスタイル（JSがクラスを付与） */
+.glossary-item.is-closing > .item-content {
+    max-height: 0 !important; /* !importantで確実に閉じる */
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
